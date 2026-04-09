@@ -1,30 +1,11 @@
-import json
+import pandas as pd
 
-INPUT_FILE = "data/trends_20260409.json"
-OUTPUT_FILE = "data/clean_trends.json"
+def process_data():
+    df = pd.read_json("data/raw_trends.json")
+    df.drop_duplicates(subset="id", inplace=True)
+    df.to_csv("data/clean_trends.csv", index=False)
+    # Also save a JSON version for your Task 3 code snippet
+    df.to_json("data/clean_trends.json", orient="records", indent=4)
+    print("Task 2: Data cleaned and saved to CSV/JSON.")
 
-def clean_data():
-
-    with open(INPUT_FILE) as f:
-        stories = json.load(f)
-
-    cleaned = []
-
-    for story in stories:
-
-        if story["title"] == "":
-            continue
-
-        if story["score"] < 5:
-            continue
-
-        cleaned.append(story)
-
-    with open(OUTPUT_FILE, "w") as f:
-        json.dump(cleaned, f, indent=4)
-
-    print("Cleaned records:", len(cleaned))
-
-
-if __name__ == "__main__":
-    clean_data()
+if __name__ == "__main__": process_data()
